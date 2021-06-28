@@ -1,17 +1,27 @@
 {
-  "name": "pixelated-face",
+  "name": "face-detection",
   "version": "1.0.0",
   "description": "",
   "main": "pixelated-face.js",
   "scripts": {
-    "start": "parcel face.html"
+    "start": "parcel index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmitriysemenko/js-face-detection.git"
   },
   "author": "",
   "license": "ISC",
-  "browserslist": [
-    "last 1 Chrome version"
-  ],
-  "dependencies": {
-    "parcel": "^2.0.0-alpha.2.1"
+  "bugs": {
+    "url": "https://github.com/dmitriysemenko/js-face-detection/issues"
+  },
+  "homepage": "https://github.com/dmitriysemenko/js-face-detection#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.2.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "parcel-bundler": "^1.12.5"
   }
 }
