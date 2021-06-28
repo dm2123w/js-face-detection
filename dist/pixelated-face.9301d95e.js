@@ -8148,7 +8148,22 @@ var ctx = canvas.getContext("2d");
 var faceCanvas = document.querySelector(".face");
 var faceCtx = faceCanvas.getContext("2d");
 var faceDetector = new window.FaceDetector();
-var SIZE = 10; // Write a function that will populate the users video
+var optionsInputs = document.querySelectorAll('.controls input[type="range"]');
+var options = {
+  SIZE: 10,
+  SCALE: 1.35
+};
+
+function handleOption(event) {
+  var _event$currentTarget = event.currentTarget,
+      value = _event$currentTarget.value,
+      name = _event$currentTarget.name;
+  options[name] = parseFloat(value);
+}
+
+optionsInputs.forEach(function (input) {
+  return input.addEventListener('input', handleOption);
+}); // Write a function that will populate the users video
 
 function populateVideo() {
   return _populateVideo.apply(this, arguments);
@@ -8245,12 +8260,14 @@ function censor(_ref) {
   face.x, // where do we start the source pull from?
   face.y, face.width, face.height, // 4 draw args
   face.x, // where should we start drawing the x and y?
-  face.y, SIZE, SIZE); // draw the small face back on, but scale up
+  face.y, options.SIZE, options.SIZE);
+  var width = face.width * options.SCALE;
+  var height = face.height * options.SCALE; // draw the small face back on, but scale up
 
   faceCtx.drawImage(faceCanvas, // source
   face.x, // where do we start the source pull from?
-  face.y, SIZE, SIZE, // Drawing args
-  face.x, face.y, face.width, face.height);
+  face.y, options.SIZE, options.SIZE, // Drawing args
+  face.x - (width - face.width) / 2, face.y - (height - face.height) / 2, width, height);
 }
 
 populateVideo().then(detect);
@@ -8282,7 +8299,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65444" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63274" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

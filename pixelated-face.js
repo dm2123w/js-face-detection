@@ -7,7 +7,20 @@ const ctx = canvas.getContext("2d");
 const faceCanvas = document.querySelector(".face");
 const faceCtx = faceCanvas.getContext("2d");
 const faceDetector = new window.FaceDetector();
-const SIZE = 10;
+
+const optionsInputs = document.querySelectorAll('.controls input[type="range"]');
+
+const options = {
+    SIZE: 10,
+    SCALE: 1.35,
+};
+
+function handleOption(event) {
+    const { value, name } = event.currentTarget;
+    options[name] = parseFloat(value);
+}
+
+optionsInputs.forEach(input => input.addEventListener('input', handleOption));
 
 // Write a function that will populate the users video
 async function populateVideo() {
@@ -53,21 +66,24 @@ function censor({ boundingBox: face }) {
         // 4 draw args
         face.x, // where should we start drawing the x and y?
         face.y,
-        SIZE,
-        SIZE
+        options.SIZE,
+        options.SIZE
     );
+
+    const width = face.width * options.SCALE;
+    const height = face.height * options.SCALE;
     // draw the small face back on, but scale up
     faceCtx.drawImage(
         faceCanvas, // source
         face.x, // where do we start the source pull from?
         face.y,
-        SIZE,
-        SIZE,
+        options.SIZE,
+        options.SIZE,
         // Drawing args
-        face.x,
-        face.y,
-        face.width,
-        face.height
+        face.x - (width - face.width) / 2,
+        face.y - (height - face.height) / 2,
+        width,
+        height
     );
 }
 
