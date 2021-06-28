@@ -8146,8 +8146,9 @@ var video = document.querySelector(".webcam");
 var canvas = document.querySelector(".video");
 var ctx = canvas.getContext("2d");
 var faceCanvas = document.querySelector(".face");
-var faceCtx = canvas.getContext("2d");
-var faceDetector = new window.FaceDetector(); // Write a function that will populate the users video
+var faceCtx = faceCanvas.getContext("2d");
+var faceDetector = new window.FaceDetector();
+var SIZE = 10; // Write a function that will populate the users video
 
 function populateVideo() {
   return _populateVideo.apply(this, arguments);
@@ -8176,13 +8177,12 @@ function _populateVideo() {
 
           case 6:
             // Size the canvases to be the same size as the video
-            console.log(video.videoWidth, video.videoHeight);
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             faceCanvas.width = video.videoWidth;
             faceCanvas.height = video.videoHeight;
 
-          case 11:
+          case 10:
           case "end":
             return _context.stop();
         }
@@ -8208,10 +8208,12 @@ function _detect() {
 
           case 2:
             faces = _context2.sent;
-            console.log(faces.length); // Ask the browser when the nex animation frame is, and tell it to run detect for us
-            // requestAnimationFrame(detect);
+            // Ask the browser when the nex animation frame is, and tell it to run detect for us
+            faces.forEach(drawFace);
+            faces.forEach(censor);
+            requestAnimationFrame(detect);
 
-          case 4:
+          case 6:
           case "end":
             return _context2.stop();
         }
@@ -8221,7 +8223,35 @@ function _detect() {
   return _detect.apply(this, arguments);
 }
 
-function drawFace(face) {}
+function drawFace(face) {
+  var _face$boundingBox = face.boundingBox,
+      width = _face$boundingBox.width,
+      height = _face$boundingBox.height,
+      top = _face$boundingBox.top,
+      left = _face$boundingBox.left;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "#ffc600";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(left, top, width, height);
+}
+
+function censor(_ref) {
+  var face = _ref.boundingBox;
+  faceCtx.imageSmoothingEnabled = false;
+  faceCtx.clearRect(0, 0, faceCanvas.width, faceCanvas.height); // draw the small face
+
+  faceCtx.drawImage( // 5 source args
+  video, // where does the source come from?
+  face.x, // where do we start the source pull from?
+  face.y, face.width, face.height, // 4 draw args
+  face.x, // where should we start drawing the x and y?
+  face.y, SIZE, SIZE); // draw the small face back on, but scale up
+
+  faceCtx.drawImage(faceCanvas, // source
+  face.x, // where do we start the source pull from?
+  face.y, SIZE, SIZE, // Drawing args
+  face.x, face.y, face.width, face.height);
+}
 
 populateVideo().then(detect);
 },{"babel-core/register":"node_modules/babel-core/register.js","babel-polyfill":"node_modules/babel-polyfill/lib/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -8252,7 +8282,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57019" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65444" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
